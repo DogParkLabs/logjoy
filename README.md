@@ -7,7 +7,7 @@ The name is an homage to the [lograge gem](https://github.com/roidrage/lograge)
 which is no longer maintained and which this gem is intended to replace.
 
 See
-[LOGRAGE_README](https://github.com/pathouse/logjoy/blob/main/LOGRAGE_README.md)
+[LOGRAGE_README](https://github.com/DogParkLabs/logjoy/blob/main/LOGRAGE_README.md)
 for more information about the differences between this gem and lograge.
 
 ```json
@@ -61,7 +61,7 @@ end
 The customizer configuration may be a class that implements a `.call` method, or a lambda.
 The customizer will receive an `ActiveSupport::Notification` event for the
 `process_action.action_controller` event.
-It should return a hash that will be added to the log in a `:custom` field.
+It should return a hash that will be added to the log message.
 
 More documentation about this event can be found here:
 https://guides.rubyonrails.org/active_support_instrumentation.html#process-action-action-controller
@@ -84,10 +84,10 @@ git commits and the created tag, and push the `.gem` file to
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-https://github.com/pathouse/logjoy. This project is intended to be a safe,
+https://github.com/DogParkLabs/logjoy. This project is intended to be a safe,
 welcoming space for collaboration, and contributors are expected to adhere to
 the [code of
-conduct](https://github.com/[USERNAME]/logjoy/blob/master/CODE_OF_CONDUCT.md).
+conduct](https://github.com/DogParkLabs/logjoy/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 
