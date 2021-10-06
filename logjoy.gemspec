@@ -6,10 +6,10 @@ Gem::Specification.new do |spec|
   spec.name          = 'logjoy'
   spec.version       = Logjoy::VERSION
   spec.authors       = ['Pat McGee']
-  spec.email         = ['patmcgee331@gmail.com']
+  spec.email         = ['pat@gooddog.com']
 
   spec.summary       = 'Alternative set of LogSubscriber classes for Rails for more structured JSON logs'
-  spec.homepage      = 'https://github.com/pathouse/logjoy'
+  spec.homepage      = 'https://github.com/DogParkLabs/logjoy'
   spec.license       = 'MIT'
   spec.required_ruby_version = Gem::Requirement.new('>= 2.4.0')
 
