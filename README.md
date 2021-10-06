@@ -1,5 +1,7 @@
 # Logjoy
 
+## Overview
+
 Logjoy makes some changes to Rails default `ActiveSupport::LogSubscriber`s in order
 to provide streamlined request logs for use in production.
 
@@ -9,6 +11,72 @@ which is no longer maintained and which this gem is intended to replace.
 See
 [LOGRAGE_README](https://github.com/DogParkLabs/logjoy/blob/main/LOGRAGE_README.md)
 for more information about the differences between this gem and lograge.
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'logjoy'
+```
+
+And then execute:
+
+    $ bundle install
+
+## Configuration
+
+Logjoy can be configured with the following options:
+
+### enabled
+
+`config.logjoy.enabled = true`
+
+You will likely only want to enable Logjoy in production, e.g. `config.logjoy.enabled = Rails.env.production?`
+
+### customizer
+
+You can provide a lambda:
+
+`config.logjoy.customizer = ->(event) { ... }`
+
+or a class that implements a `.call` method:
+
+`config.logjoy.customizer = CustomizerClass`
+
+The customizer will receive an `ActiveSupport::Notification` event for the
+`process_action.action_controller` event.
+It should return a hash that will be added to the log message.
+
+More documentation about this event can be found here:
+https://guides.rubyonrails.org/active_support_instrumentation.html#process-action-action-controller
+
+### filters
+
+`config.logjoy.filters = ['/paths', '/to', '/ignore']`
+
+The filters configuration can be used to ignore requests with the given path to
+reduce log noise from things like health checks.
+
+### Example of full configuration
+
+`config/initializers/logjoy.rb`
+
+```ruby
+Rails.application.configure do |config|
+  config.logjoy.enabled = true
+
+  config.logjoy.customizer = CustomizerClass
+  # or
+  config.logjoy.customizer = ->(event) { ... }
+
+  config.logjoy.filters = ['/health_check']
+end
+```
+
+## Log Format
+
+Log messages are JSON formatted.
 
 ```json
 {
@@ -28,46 +96,19 @@ for more information about the differences between this gem and lograge.
 }
 ```
 
-## Installation
+If you are using `Logger::Formatter` to format your logs the output should look something like:
 
-Add this line to your application's Gemfile:
+`I, [timestamp]  INFO -- : [request_id] {"controller":"PagesController", ...}`
 
-```ruby
-gem 'logjoy'
+If you define your own formatter keep in mind that `msg` is already JSON formatted in the `#call` method that you will define:
+
 ```
-
-And then execute:
-
-    $ bundle install
-
-## Usage
-
-Logjoy can be configured with the following options:
-
-`config/initializers/logjoy.rb`
-
-```ruby
-Rails.application.configure do |config|
-  config.logjoy.enabled = true
-
-  config.logjoy.customizer = CustomizerClass
-  # or
-  config.logjoy.customizer = ->(event) { ... }
-
-  config.logjoy.filters = ['/health_check']
+class MyFormatter < Logger::Formatter
+  def call(severity, time, progname, msg)
+    # msg is a JSON string
+  end
 end
 ```
-
-The customizer configuration may be a class that implements a `.call` method, or a lambda.
-The customizer will receive an `ActiveSupport::Notification` event for the
-`process_action.action_controller` event.
-It should return a hash that will be added to the log message.
-
-More documentation about this event can be found here:
-https://guides.rubyonrails.org/active_support_instrumentation.html#process-action-action-controller
-
-The filters configuration can be used to ignore requests with the given path to
-reduce log noise from things like health checks.
 
 ## Development
 
